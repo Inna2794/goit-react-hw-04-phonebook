@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import uniqid from 'uniqid';
 import { TheForm, Label, Input, SubmitBtn } from './Form.styled';
 
-const Form = props => {
-  const [id, setId] = useState(uniqid());
+const Form = ({ onSubmit }) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
@@ -24,8 +23,7 @@ const Form = props => {
 
   const handleSubmit = evt => {
     evt.preventDefault();
-    setId(uniqid());
-    props.onSubmit({ id: id, name: name, number: number });
+    onSubmit({ name, number, id: uniqid() });
     resetForm();
   };
 

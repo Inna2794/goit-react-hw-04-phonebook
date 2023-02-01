@@ -5,7 +5,7 @@ import Contacts from 'components/Contacts';
 
 export const App = () => {
   const [contacts, setContacts] = useState(
-    () => JSON.parse(window.localStorage.getItem('phoneBook')) ?? ''
+    () => JSON.parse(window.localStorage.getItem('phoneBook')) ?? []
   );
   const [filter, setFilter] = useState('');
 
@@ -14,20 +14,25 @@ export const App = () => {
   }, [contacts]);
 
   const formSubmitHandler = data => {
-    let check = false;
-    if (contacts !== '') {
-      check = contacts.find(
-        el => el.name.toLowerCase() === data.name.toLowerCase()
-      );
-    }
+    const check = contacts.find(
+      el => el.name.toLowerCase() === data.name.toLowerCase()
+    );
     return check
       ? alert(`${data.name} is already exist.`)
       : setContacts([...contacts, data]);
   };
 
+  const getFilteredContacts = () => {
+    return contacts.filter(el =>
+      el.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
+
   const handleClickDelete = id => {
     setContacts(contacts.filter(el => el.id !== id));
   };
+
+  const filteredContacts = getFilteredContacts();
 
   return (
     <div>
@@ -35,7 +40,7 @@ export const App = () => {
       <Form onSubmit={formSubmitHandler} />
       <h2 style={{ color: '#FF6C00' }}>Contacts</h2>
       <Filter onChange={setFilter} />
-      <Contacts onDelete={handleClickDelete} data={contacts} filter={filter} />
+      <Contacts onDelete={handleClickDelete} data={filteredContacts} />
     </div>
   );
 };
